@@ -1,14 +1,9 @@
 class BaccaratSimulation {
     constructor() {
-        this.random = Math.random;
         this.bigRoad = [];
         this.lastBet = '';
         this.betCount = 0;
-    }
-
-    playGame() {
-        // Simulate a Baccarat game result
-        return this.random() > 0.5 ? "Player" : "Banker";
+        this.currentStrategy = 'repeatLast';
     }
 
     recordResult(result) {
@@ -40,12 +35,18 @@ class BaccaratSimulation {
     }
 
     updateRecommendedBet() {
-        let currentBet;
-
-        if (this.betCount < 2) {
-            currentBet = this.lastBet;
-        } else {
-            currentBet = this.lastBet === "Player" ? "Banker" : "Player";
+        let currentBet = '';
+        
+        switch (this.currentStrategy) {
+            case 'repeatLast':
+                currentBet = this.getRepeatLastBet();
+                break;
+            case 'alternate':
+                currentBet = this.getAlternateBet();
+                break;
+            case 'trend':
+                currentBet = this.getTrendBet();
+                break;
         }
 
         this.lastBet = currentBet;
@@ -55,8 +56,34 @@ class BaccaratSimulation {
         recommendedBetText.textContent = `Recommended Bet: ${currentBet}`;
     }
 
-    resetBetting() {
-        this.betCount = 0;
+    getRepeatLastBet() {
+        if (this.bigRoad.length === 0) {
+            return 'Player';
+        }
+        return this.bigRoad[this.bigRoad.length - 1];
+    }
+
+    getAlternateBet() {
+        if (this.bigRoad.length === 0) {
+            return 'Player';
+        }
+        return this.bigRoad[this.bigRoad.length - 1] === 'Player' ? 'Banker' : 'Player';
+    }
+
+    getTrendBet() {
+        if (this.bigRoad.length === 0) {
+            return 'Player';
+        }
+        const lastResult = this.bigRoad[this.bigRoad.length - 1];
+        const trendCount = this.bigRoad.reduceRight((count, result) => {
+            return result === lastResult ? count + 1 : 0;
+        }, 0);
+        return trendCount % 2 === 0 ? lastResult : (lastResult === 'Player' ? 'Banker' : 'Player');
+    }
+
+    changeStrategy(strategy) {
+        this.currentStrategy = strategy;
+        this.updateRecommendedBet();
     }
 }
 
@@ -66,6 +93,7 @@ function recordResult(result) {
     baccaratSimulation.recordResult(result);
 }
 
-function placeBet(bet) {
-    baccaratSimulation.placeBet(bet);
+function changeStrategy() {
+    const strategy = document.getElementById('strategySelect').value;
+    baccaratSimulation.changeStrategy(strategy);
 }

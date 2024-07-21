@@ -47,6 +47,9 @@ class BaccaratSimulation {
             case 'trend':
                 currentBet = this.getTrendBet();
                 break;
+            case 'reverseTrend':
+                currentBet = this.getReverseTrendBet();
+                break;
         }
 
         this.lastBet = currentBet;
@@ -70,14 +73,39 @@ class BaccaratSimulation {
     }
 
     getTrendBet() {
-        if (this.bigRoad.length === 0) {
+        if (this.bigRoad.length < 2) {
             return 'Player';
         }
+        
+        // Analyze the last few outcomes
         const lastResult = this.bigRoad[this.bigRoad.length - 1];
-        const trendCount = this.bigRoad.reduceRight((count, result) => {
-            return result === lastResult ? count + 1 : 0;
-        }, 0);
-        return trendCount % 2 === 0 ? lastResult : (lastResult === 'Player' ? 'Banker' : 'Player');
+        const secondLastResult = this.bigRoad[this.bigRoad.length - 2];
+
+        if (lastResult === secondLastResult) {
+            // If last two outcomes are the same, bet on the same result continuing
+            return lastResult;
+        } else {
+            // If last two outcomes are different, bet on the last result repeating
+            return lastResult;
+        }
+    }
+
+    getReverseTrendBet() {
+        if (this.bigRoad.length < 2) {
+            return 'Player';
+        }
+        
+        // Analyze the last few outcomes
+        const lastResult = this.bigRoad[this.bigRoad.length - 1];
+        const secondLastResult = this.bigRoad[this.bigRoad.length - 2];
+
+        if (lastResult === secondLastResult) {
+            // If last two outcomes are the same, bet on the opposite result
+            return lastResult === 'Player' ? 'Banker' : 'Player';
+        } else {
+            // If last two outcomes are different, bet on the opposite of the last result
+            return lastResult === 'Player' ? 'Banker' : 'Player';
+        }
     }
 
     changeStrategy(strategy) {

@@ -1,8 +1,6 @@
 class BaccaratSimulation {
     constructor() {
         this.bigRoad = [];
-        this.lastBet = '';
-        this.betCount = 0;
         this.currentStrategy = 'repeatLast';
         this.customSequence = 'BPBPPBBP';
         this.customSequenceIndex = 0;
@@ -18,22 +16,26 @@ class BaccaratSimulation {
         const bigRoad = document.getElementById('bigRoad');
         bigRoad.innerHTML = '';
 
-        let col = document.createElement('div');
-        col.className = 'bigRoadRow';
+        let colIndex = 0;
+        let rowIndex = 0;
+        let maxRow = 6; // Typically Big Road has 6 rows
 
         this.bigRoad.forEach((result, index) => {
-            if (index % 6 === 0 && index !== 0) {
-                bigRoad.appendChild(col);
-                col = document.createElement('div');
-                col.className = 'bigRoadRow';
+            if (rowIndex >= maxRow) {
+                rowIndex = 0;
+                colIndex++;
             }
             const cell = document.createElement('div');
             cell.className = `bigRoadCell ${result.toLowerCase()}`;
             cell.textContent = result.charAt(0);
-            col.appendChild(cell);
-        });
 
-        bigRoad.appendChild(col);
+            // Position the cell in the grid
+            cell.style.gridRowStart = rowIndex + 1;
+            cell.style.gridColumnStart = colIndex + 1;
+
+            bigRoad.appendChild(cell);
+            rowIndex++;
+        });
     }
 
     updateRecommendedBet() {
@@ -56,8 +58,6 @@ class BaccaratSimulation {
                 currentBet = this.getZachSecretSauceBet();
                 break;
         }
-
-        this.lastBet = currentBet;
 
         const recommendedBetText = document.getElementById('recommendedBet');
         recommendedBetText.textContent = `Recommended Bet: ${currentBet}`;

@@ -52,6 +52,14 @@
     <div id="statusText">Enter the last result!</div>
     <button class="resultButton" onclick="recordResult('Player')">Player</button>
     <button class="resultButton" onclick="recordResult('Banker')">Banker</button>
+    <div>
+        <label for="strategySelect">Select Betting Strategy: </label>
+        <select id="strategySelect" onchange="changeStrategy()">
+            <option value="repeatLast">Repeat Last Bet</option>
+            <option value="alternate">Alternate Bets</option>
+            <option value="trend">Follow the Trend</option>
+        </select>
+    </div>
     <div id="recommendedBet" style="margin-top: 20px; font-size: 24px;"></div>
     <div id="bigRoad"></div>
 

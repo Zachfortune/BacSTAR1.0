@@ -5,10 +5,24 @@ class BaccaratSimulation {
         this.customSequence = 'BPBPPBBP';
         this.customSequenceIndex = 0;
         this.lastRecommendedBet = '';
+        this.potentialResult = '';
         this.winCount = 0;
         this.lossCount = 0;
         this.playerCount = 0;
         this.bankerCount = 0;
+    }
+
+    setPotentialResult(result) {
+        this.potentialResult = result;
+        document.getElementById('statusText').textContent = `Potential Result: ${result}`;
+    }
+
+    confirmResult() {
+        if (this.potentialResult) {
+            this.recordResult(this.potentialResult);
+            this.potentialResult = '';
+            document.getElementById('statusText').textContent = 'Enter the last result!';
+        }
     }
 
     recordResult(result) {
@@ -55,16 +69,20 @@ class BaccaratSimulation {
     }
 
     recordWin() {
-        this.winCount++;
-        document.getElementById('winCount').textContent = this.winCount;
-        this.resetStrategies();
-        this.updateRecommendedBet();
+        if (this.potentialResult) {
+            this.winCount++;
+            document.getElementById('winCount').textContent = this.winCount;
+            this.confirmResult();
+            this.resetStrategies();
+        }
     }
 
     recordLoss() {
-        this.lossCount++;
-        document.getElementById('lossCount').textContent = this.lossCount;
-        this.updateRecommendedBet();
+        if (this.potentialResult) {
+            this.lossCount++;
+            document.getElementById('lossCount').textContent = this.lossCount;
+            this.confirmResult();
+        }
     }
 
     resetStrategies() {
@@ -165,8 +183,8 @@ class BaccaratSimulation {
 
 const baccaratSimulation = new BaccaratSimulation();
 
-function recordResult(result) {
-    baccaratSimulation.recordResult(result);
+function setPotentialResult(result) {
+    baccaratSimulation.setPotentialResult(result);
 }
 
 function recordWin() {

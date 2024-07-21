@@ -6,18 +6,60 @@
     <title>Baccarat Simulation</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            height: 100vh;
+        }
+        #container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
             text-align: center;
-            margin-top: 20px;
         }
         #statusText {
             font-size: 24px;
             margin-bottom: 20px;
+            color: #333;
         }
         .resultButton {
             padding: 10px 20px;
             font-size: 18px;
             margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .resultButton.player {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .resultButton.banker {
+            background-color: #dc3545;
+            color: #fff;
+        }
+        .resultButton:hover {
+            opacity: 0.8;
+        }
+        #strategySelect {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+        }
+        #recommendedBet {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #28a745;
         }
         #bigRoad {
             margin-top: 20px;
@@ -30,38 +72,41 @@
             flex-wrap: nowrap;
         }
         .bigRoadCell {
-            width: 20px;
-            height: 20px;
+            width: 25px;
+            height: 25px;
             border: 1px solid #000;
             margin: 1px;
             text-align: center;
-            line-height: 20px;
-            font-size: 12px;
+            line-height: 25px;
+            font-size: 14px;
         }
         .player {
-            background-color: blue;
+            background-color: #007bff;
             color: white;
         }
         .banker {
-            background-color: red;
+            background-color: #dc3545;
             color: white;
         }
     </style>
 </head>
 <body>
-    <div id="statusText">Enter the last result!</div>
-    <button class="resultButton" onclick="recordResult('Player')">Player</button>
-    <button class="resultButton" onclick="recordResult('Banker')">Banker</button>
-    <div>
-        <label for="strategySelect">Select Betting Strategy: </label>
-        <select id="strategySelect" onchange="changeStrategy()">
-            <option value="repeatLast">Repeat Last Bet</option>
-            <option value="alternate">Alternate Bets</option>
-            <option value="trend">Follow the Trend</option>
-        </select>
+    <div id="container">
+        <div id="statusText">Enter the last result!</div>
+        <button class="resultButton player" onclick="recordResult('Player')">Player</button>
+        <button class="resultButton banker" onclick="recordResult('Banker')">Banker</button>
+        <div>
+            <label for="strategySelect">Select Betting Strategy: </label>
+            <select id="strategySelect" onchange="changeStrategy()">
+                <option value="repeatLast">Repeat Last Bet</option>
+                <option value="alternate">Alternate Bets</option>
+                <option value="trend">Follow the Trend</option>
+                <option value="reverseTrend">Reverse the Trend</option>
+            </select>
+        </div>
+        <div id="recommendedBet">Recommended Bet: </div>
+        <div id="bigRoad"></div>
     </div>
-    <div id="recommendedBet" style="margin-top: 20px; font-size: 24px;"></div>
-    <div id="bigRoad"></div>
 
     <script src="script.js"></script>
 </body>

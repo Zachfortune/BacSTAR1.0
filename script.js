@@ -4,12 +4,18 @@ class BaccaratSimulation {
         this.currentStrategy = 'repeatLast';
         this.customSequence = 'BPBPPBBP';
         this.customSequenceIndex = 0;
+        this.lastRecommendedBet = '';
+        this.winCount = 0;
+        this.lossCount = 0;
+        this.playerCount = 0;
+        this.bankerCount = 0;
     }
 
     recordResult(result) {
         this.bigRoad.push(result);
         this.updateBigRoad();
-        this.checkForWin(result);
+        this.updateCounters(result);
+        this.updateRecommendedBet();
     }
 
     updateBigRoad() {
@@ -18,7 +24,7 @@ class BaccaratSimulation {
 
         let colIndex = 0;
         let rowIndex = 0;
-        let maxRow = 6; // Typically Big Road has 6 rows
+        const maxRow = 6; // Typically Big Road has 6 rows
 
         this.bigRoad.forEach((result, index) => {
             if (rowIndex >= maxRow) {
@@ -38,11 +44,26 @@ class BaccaratSimulation {
         });
     }
 
-    checkForWin(result) {
-        const recommendedBet = this.getRecommendedBet();
-        if (recommendedBet === result) {
-            this.resetStrategies();
+    updateCounters(result) {
+        if (result === 'Player') {
+            this.playerCount++;
+        } else if (result === 'Banker') {
+            this.bankerCount++;
         }
+        document.getElementById('playerCount').textContent = this.playerCount;
+        document.getElementById('bankerCount').textContent = this.bankerCount;
+    }
+
+    recordWin() {
+        this.winCount++;
+        document.getElementById('winCount').textContent = this.winCount;
+        this.resetStrategies();
+        this.updateRecommendedBet();
+    }
+
+    recordLoss() {
+        this.lossCount++;
+        document.getElementById('lossCount').textContent = this.lossCount;
         this.updateRecommendedBet();
     }
 
@@ -53,6 +74,8 @@ class BaccaratSimulation {
 
     updateRecommendedBet() {
         const currentBet = this.getRecommendedBet();
+        this.lastRecommendedBet = currentBet;
+
         const recommendedBetText = document.getElementById('recommendedBet');
         recommendedBetText.textContent = `Recommended Bet: ${currentBet}`;
     }
@@ -144,6 +167,14 @@ const baccaratSimulation = new BaccaratSimulation();
 
 function recordResult(result) {
     baccaratSimulation.recordResult(result);
+}
+
+function recordWin() {
+    baccaratSimulation.recordWin();
+}
+
+function recordLoss() {
+    baccaratSimulation.recordLoss();
 }
 
 function changeStrategy() {

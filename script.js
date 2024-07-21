@@ -4,6 +4,8 @@ class BaccaratSimulation {
         this.lastBet = '';
         this.betCount = 0;
         this.currentStrategy = 'repeatLast';
+        this.customSequence = 'BPBPPBBP';
+        this.customSequenceIndex = 0;
     }
 
     recordResult(result) {
@@ -50,6 +52,9 @@ class BaccaratSimulation {
             case 'reverseTrend':
                 currentBet = this.getReverseTrendBet();
                 break;
+            case 'zachSecretSauce':
+                currentBet = this.getZachSecretSauceBet();
+                break;
         }
 
         this.lastBet = currentBet;
@@ -73,43 +78,53 @@ class BaccaratSimulation {
     }
 
     getTrendBet() {
-        if (this.bigRoad.length < 2) {
-            return 'Player';
+        if (this.bigRoad.length < 4) {
+            return this.getRepeatLastBet();
         }
-        
-        // Analyze the last few outcomes
-        const lastResult = this.bigRoad[this.bigRoad.length - 1];
-        const secondLastResult = this.bigRoad[this.bigRoad.length - 2];
 
-        if (lastResult === secondLastResult) {
-            // If last two outcomes are the same, bet on the same result continuing
-            return lastResult;
+        const lastFour = this.bigRoad.slice(-4);
+        const playerCount = lastFour.filter(result => result === 'Player').length;
+        const bankerCount = lastFour.filter(result => result === 'Banker').length;
+
+        if (playerCount > bankerCount) {
+            return 'Player';
+        } else if (bankerCount > playerCount) {
+            return 'Banker';
         } else {
-            // If last two outcomes are different, bet on the last result repeating
-            return lastResult;
+            return this.bigRoad[this.bigRoad.length - 1];
         }
     }
 
     getReverseTrendBet() {
-        if (this.bigRoad.length < 2) {
-            return 'Player';
+        if (this.bigRoad.length < 4) {
+            return this.getAlternateBet();
         }
-        
-        // Analyze the last few outcomes
-        const lastResult = this.bigRoad[this.bigRoad.length - 1];
-        const secondLastResult = this.bigRoad[this.bigRoad.length - 2];
 
-        if (lastResult === secondLastResult) {
-            // If last two outcomes are the same, bet on the opposite result
-            return lastResult === 'Player' ? 'Banker' : 'Player';
+        const lastFour = this.bigRoad.slice(-4);
+        const playerCount = lastFour.filter(result => result === 'Player').length;
+        const bankerCount = lastFour.filter(result => result === 'Banker').length;
+
+        if (playerCount > bankerCount) {
+            return 'Banker';
+        } else if (bankerCount > playerCount) {
+            return 'Player';
         } else {
-            // If last two outcomes are different, bet on the opposite of the last result
-            return lastResult === 'Player' ? 'Banker' : 'Player';
+            return this.bigRoad[this.bigRoad.length - 1] === 'Player' ? 'Banker' : 'Player';
         }
+    }
+
+    getZachSecretSauceBet() {
+        const sequenceChar = this.customSequence[this.customSequenceIndex];
+        const oppositeBet = sequenceChar === 'B' ? 'Player' : 'Banker';
+        
+        this.customSequenceIndex = (this.customSequenceIndex + 1) % this.customSequence.length;
+        
+        return oppositeBet;
     }
 
     changeStrategy(strategy) {
         this.currentStrategy = strategy;
+        this.customSequenceIndex = 0; // Reset sequence index when strategy changes
         this.updateRecommendedBet();
     }
 }

@@ -14,7 +14,7 @@
             font-size: 24px;
             margin-bottom: 20px;
         }
-        .betButton, .resultButton {
+        .resultButton {
             padding: 10px 20px;
             font-size: 18px;
             margin: 10px;
@@ -52,11 +52,7 @@
     <div id="statusText">Enter the last result!</div>
     <button class="resultButton" onclick="recordResult('Player')">Player</button>
     <button class="resultButton" onclick="recordResult('Banker')">Banker</button>
-    <br>
-    <div id="bettingButtons" style="display: none;">
-        <button class="betButton" onclick="placeBet('Player')">Bet Player</button>
-        <button class="betButton" onclick="placeBet('Banker')">Bet Banker</button>
-    </div>
+    <div id="recommendedBet" style="margin-top: 20px; font-size: 24px;"></div>
     <div id="bigRoad"></div>
 
     <script src="script.js"></script>

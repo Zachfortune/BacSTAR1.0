@@ -14,7 +14,7 @@ class BaccaratSimulation {
     recordResult(result) {
         this.bigRoad.push(result);
         this.updateBigRoad();
-        document.getElementById('bettingButtons').style.display = 'block';
+        this.updateRecommendedBet();
     }
 
     updateBigRoad() {
@@ -39,8 +39,8 @@ class BaccaratSimulation {
         bigRoad.appendChild(col);
     }
 
-    placeBet(bet) {
-        let currentBet = bet;
+    updateRecommendedBet() {
+        let currentBet;
 
         if (this.betCount < 2) {
             currentBet = this.lastBet;
@@ -48,16 +48,11 @@ class BaccaratSimulation {
             currentBet = this.lastBet === "Player" ? "Banker" : "Player";
         }
 
-        const result = this.playGame() === currentBet;
         this.lastBet = currentBet;
         this.betCount++;
 
-        const statusText = document.getElementById('statusText');
-        statusText.textContent = `Bet: ${currentBet} Result: ${result ? "Win" : "Lose"}`;
-
-        if (result) {
-            this.resetBetting();
-        }
+        const recommendedBetText = document.getElementById('recommendedBet');
+        recommendedBetText.textContent = `Recommended Bet: ${currentBet}`;
     }
 
     resetBetting() {

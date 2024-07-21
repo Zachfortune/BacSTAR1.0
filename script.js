@@ -50,7 +50,6 @@ class BaccaratSimulation {
         }
 
         this.lastBet = currentBet;
-        this.betCount++;
 
         const recommendedBetText = document.getElementById('recommendedBet');
         recommendedBetText.textContent = `Recommended Bet: ${currentBet}`;

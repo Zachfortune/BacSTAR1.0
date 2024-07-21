@@ -20,22 +20,23 @@ class BaccaratSimulation {
     updateBigRoad() {
         const bigRoad = document.getElementById('bigRoad');
         bigRoad.innerHTML = '';
-        let row = document.createElement('div');
-        row.className = 'bigRoadRow';
+
+        let col = document.createElement('div');
+        col.className = 'bigRoadRow';
 
         this.bigRoad.forEach((result, index) => {
             if (index % 6 === 0 && index !== 0) {
-                bigRoad.appendChild(row);
-                row = document.createElement('div');
-                row.className = 'bigRoadRow';
+                bigRoad.appendChild(col);
+                col = document.createElement('div');
+                col.className = 'bigRoadRow';
             }
             const cell = document.createElement('div');
             cell.className = `bigRoadCell ${result.toLowerCase()}`;
             cell.textContent = result.charAt(0);
-            row.appendChild(cell);
+            col.appendChild(cell);
         });
 
-        bigRoad.appendChild(row);
+        bigRoad.appendChild(col);
     }
 
     placeBet(bet) {

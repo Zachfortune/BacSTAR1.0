@@ -9,7 +9,7 @@ class BaccaratSimulation {
     recordResult(result) {
         this.bigRoad.push(result);
         this.updateBigRoad();
-        this.updateRecommendedBet();
+        this.checkForWin(result);
     }
 
     updateBigRoad() {
@@ -38,29 +38,40 @@ class BaccaratSimulation {
         });
     }
 
-    updateRecommendedBet() {
-        let currentBet = '';
-        
-        switch (this.currentStrategy) {
-            case 'repeatLast':
-                currentBet = this.getRepeatLastBet();
-                break;
-            case 'alternate':
-                currentBet = this.getAlternateBet();
-                break;
-            case 'trend':
-                currentBet = this.getTrendBet();
-                break;
-            case 'reverseTrend':
-                currentBet = this.getReverseTrendBet();
-                break;
-            case 'zachSecretSauce':
-                currentBet = this.getZachSecretSauceBet();
-                break;
+    checkForWin(result) {
+        const recommendedBet = this.getRecommendedBet();
+        if (recommendedBet === result) {
+            this.resetStrategies();
         }
+        this.updateRecommendedBet();
+    }
 
+    resetStrategies() {
+        this.customSequenceIndex = 0; // Reset custom sequence index
+        // Add other strategy resets here if needed
+    }
+
+    updateRecommendedBet() {
+        const currentBet = this.getRecommendedBet();
         const recommendedBetText = document.getElementById('recommendedBet');
         recommendedBetText.textContent = `Recommended Bet: ${currentBet}`;
+    }
+
+    getRecommendedBet() {
+        switch (this.currentStrategy) {
+            case 'repeatLast':
+                return this.getRepeatLastBet();
+            case 'alternate':
+                return this.getAlternateBet();
+            case 'trend':
+                return this.getTrendBet();
+            case 'reverseTrend':
+                return this.getReverseTrendBet();
+            case 'zachSecretSauce':
+                return this.getZachSecretSauceBet();
+            default:
+                return 'Player';
+        }
     }
 
     getRepeatLastBet() {
@@ -124,7 +135,7 @@ class BaccaratSimulation {
 
     changeStrategy(strategy) {
         this.currentStrategy = strategy;
-        this.customSequenceIndex = 0; // Reset sequence index when strategy changes
+        this.resetStrategies(); // Reset strategies when changing
         this.updateRecommendedBet();
     }
 }

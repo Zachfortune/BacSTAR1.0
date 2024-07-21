@@ -1,47 +1,75 @@
 class BaccaratSimulation {
     constructor() {
         this.random = Math.random;
+        this.bigRoad = [];
+        this.lastBet = '';
+        this.betCount = 0;
     }
 
     playGame() {
         // Simulate a Baccarat game result
         return this.random() > 0.5 ? "Player" : "Banker";
     }
-}
 
-document.addEventListener('DOMContentLoaded', () => {
-    const statusText = document.getElementById('statusText');
-    const betButton = document.getElementById('betButton');
-    const baccaratSimulation = new BaccaratSimulation();
+    recordResult(result) {
+        this.bigRoad.push(result);
+        this.updateBigRoad();
+        document.getElementById('bettingButtons').style.display = 'block';
+    }
 
-    let lastBet = "Player"; // Default initial bet
-    let betCount = 0;
+    updateBigRoad() {
+        const bigRoad = document.getElementById('bigRoad');
+        bigRoad.innerHTML = '';
+        let row = document.createElement('div');
+        row.className = 'bigRoadRow';
 
-    betButton.addEventListener('click', () => {
-        placeBet();
-    });
+        this.bigRoad.forEach((result, index) => {
+            if (index % 6 === 0 && index !== 0) {
+                bigRoad.appendChild(row);
+                row = document.createElement('div');
+                row.className = 'bigRoadRow';
+            }
+            const cell = document.createElement('div');
+            cell.className = `bigRoadCell ${result.toLowerCase()}`;
+            cell.textContent = result.charAt(0);
+            row.appendChild(cell);
+        });
 
-    function placeBet() {
-        let currentBet;
+        bigRoad.appendChild(row);
+    }
 
-        if (betCount < 2) {
-            currentBet = lastBet;
+    placeBet(bet) {
+        let currentBet = bet;
+
+        if (this.betCount < 2) {
+            currentBet = this.lastBet;
         } else {
-            currentBet = lastBet === "Player" ? "Banker" : "Player";
+            currentBet = this.lastBet === "Player" ? "Banker" : "Player";
         }
 
-        const result = baccaratSimulation.playGame() === currentBet;
-        lastBet = currentBet;
-        betCount++;
+        const result = this.playGame() === currentBet;
+        this.lastBet = currentBet;
+        this.betCount++;
 
+        const statusText = document.getElementById('statusText');
         statusText.textContent = `Bet: ${currentBet} Result: ${result ? "Win" : "Lose"}`;
 
         if (result) {
-            resetBetting();
+            this.resetBetting();
         }
     }
 
-    function resetBetting() {
-        betCount = 0;
+    resetBetting() {
+        this.betCount = 0;
     }
-});
+}
+
+const baccaratSimulation = new BaccaratSimulation();
+
+function recordResult(result) {
+    baccaratSimulation.recordResult(result);
+}
+
+function placeBet(bet) {
+    baccaratSimulation.placeBet(bet);
+}

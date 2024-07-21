@@ -30,7 +30,7 @@
             margin-bottom: 20px;
             color: #333;
         }
-        .resultButton {
+        .resultButton, .winLossButton {
             padding: 10px 20px;
             font-size: 18px;
             margin: 10px;
@@ -47,7 +47,11 @@
             background-color: #dc3545;
             color: #fff;
         }
-        .resultButton:hover {
+        .winLossButton {
+            background-color: #ffc107;
+            color: #fff;
+        }
+        .resultButton:hover, .winLossButton:hover {
             opacity: 0.8;
         }
         #strategySelect {
@@ -61,6 +65,18 @@
             margin-top: 20px;
             font-size: 24px;
             color: #28a745;
+        }
+        #counters {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            font-size: 20px;
+        }
+        .counter {
+            background: #f0f0f0;
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
         #bigRoad {
             margin-top: 20px;
@@ -104,6 +120,16 @@
             </select>
         </div>
         <div id="recommendedBet">Recommended Bet: </div>
+        <div id="counters">
+            <div class="counter">Wins: <span id="winCount">0</span></div>
+            <div class="counter">Losses: <span id="lossCount">0</span></div>
+            <div class="counter">Player: <span id="playerCount">0</span></div>
+            <div class="counter">Banker: <span id="bankerCount">0</span></div>
+        </div>
+        <div>
+            <button class="winLossButton" onclick="recordWin()">Win</button>
+            <button class="winLossButton" onclick="recordLoss()">Lose</button>
+        </div>
         <div id="bigRoad"></div>
     </div>
 

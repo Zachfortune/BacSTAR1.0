@@ -230,6 +230,7 @@ function recordWin() {
 
 function recordLoss() {
     baccaratSimulation.recordLoss();
+    baccaratSimulation.incrementCustomSequence(); // Continue sequence on loss
 }
 
 function changeStrategy() {

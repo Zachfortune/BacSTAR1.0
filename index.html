@@ -22,7 +22,7 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 80%;
-            max-width: 600px;
+            max-width: 800px;
             text-align: center;
         }
         #statusText {
@@ -54,12 +54,13 @@
         .resultButton:hover, .winLossButton:hover {
             opacity: 0.8;
         }
-        #strategySelect {
+        #strategySelect, #viewModeSelect {
             padding: 10px;
             font-size: 16px;
             border-radius: 5px;
             border: 1px solid #ccc;
             margin-top: 10px;
+            margin-bottom: 10px;
         }
         #recommendedBet {
             margin-top: 20px;
@@ -78,13 +79,16 @@
             border-radius: 10px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
-        #bigRoad {
+        .viewContainer {
+            display: none;
             margin-top: 20px;
+        }
+        .active {
             display: grid;
             grid-template-columns: repeat(12, 30px);
             gap: 1px;
         }
-        .bigRoadCell {
+        .bigRoadCell, .bigEyeBoyCell, .smallRoadCell, .cockroachPigCell {
             width: 30px;
             height: 30px;
             border: 1px solid #000;
@@ -119,6 +123,15 @@
                 <option value="zachSecretSauce">Zach's Secret Sauce #1</option>
             </select>
         </div>
+        <div>
+            <label for="viewModeSelect">Select View Mode: </label>
+            <select id="viewModeSelect" onchange="changeViewMode()">
+                <option value="bigRoad">Big Road</option>
+                <option value="bigEyeBoy">Big Eye Boy</option>
+                <option value="smallRoad">Small Road</option>
+                <option value="cockroachPig">Cockroach Pig</option>
+            </select>
+        </div>
         <div id="recommendedBet">Recommended Bet: </div>
         <div id="counters">
             <div class="counter">Wins: <span id="winCount">0</span></div>
@@ -130,7 +143,10 @@
             <button class="winLossButton" onclick="recordWin()">Win</button>
             <button class="winLossButton" onclick="recordLoss()">Lose</button>
         </div>
-        <div id="bigRoad"></div>
+        <div id="bigRoad" class="viewContainer"></div>
+        <div id="bigEyeBoy" class="viewContainer"></div>
+        <div id="smallRoad" class="viewContainer"></div>
+        <div id="cockroachPig" class="viewContainer"></div>
     </div>
 
     <script src="script.js"></script>

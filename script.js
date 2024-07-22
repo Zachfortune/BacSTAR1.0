@@ -66,16 +66,19 @@ class BaccaratSimulation {
     updateBigEyeBoy() {
         const bigEyeBoy = document.getElementById('bigEyeBoy');
         bigEyeBoy.innerHTML = '';
+        // Implement the Big Eye Boy logic here
     }
 
     updateSmallRoad() {
         const smallRoad = document.getElementById('smallRoad');
         smallRoad.innerHTML = '';
+        // Implement the Small Road logic here
     }
 
     updateCockroachPig() {
         const cockroachPig = document.getElementById('cockroachPig');
         cockroachPig.innerHTML = '';
+        // Implement the Cockroach Pig logic here
     }
 
     updateCounters(result) {

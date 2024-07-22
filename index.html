@@ -54,7 +54,7 @@
         .resultButton:hover, .winLossButton:hover {
             opacity: 0.8;
         }
-        #strategySelect, #viewModeSelect {
+        #strategySelect {
             padding: 10px;
             font-size: 16px;
             border-radius: 5px;
@@ -80,15 +80,12 @@
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
         .viewContainer {
-            display: none;
-            margin-top: 20px;
-        }
-        .active {
             display: grid;
             grid-template-columns: repeat(12, 30px);
             gap: 1px;
+            margin-top: 20px;
         }
-        .bigRoadCell, .bigEyeBoyCell, .smallRoadCell, .cockroachPigCell {
+        .bigRoadCell {
             width: 30px;
             height: 30px;
             border: 1px solid #000;
@@ -123,15 +120,6 @@
                 <option value="zachSecretSauce">Zach's Secret Sauce #1</option>
             </select>
         </div>
-        <div>
-            <label for="viewModeSelect">Select View Mode: </label>
-            <select id="viewModeSelect" onchange="changeViewMode()">
-                <option value="bigRoad">Big Road</option>
-                <option value="bigEyeBoy">Big Eye Boy</option>
-                <option value="smallRoad">Small Road</option>
-                <option value="cockroachPig">Cockroach Pig</option>
-            </select>
-        </div>
         <div id="recommendedBet">Recommended Bet: </div>
         <div id="counters">
             <div class="counter">Wins: <span id="winCount">0</span></div>
@@ -144,9 +132,6 @@
             <button class="winLossButton" onclick="recordLoss()">Lose</button>
         </div>
         <div id="bigRoad" class="viewContainer"></div>
-        <div id="bigEyeBoy" class="viewContainer"></div>
-        <div id="smallRoad" class="viewContainer"></div>
-        <div id="cockroachPig" class="viewContainer"></div>
     </div>
 </body>
 </html>

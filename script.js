@@ -26,16 +26,9 @@ class BaccaratSimulation {
 
     recordResult(result) {
         this.bigRoad.push(result);
-        this.updateViews();
+        this.updateBigRoad();
         this.updateCounters(result);
         this.updateRecommendedBet();
-    }
-
-    updateViews() {
-        this.updateBigRoad();
-        this.updateBigEyeBoy();
-        this.updateSmallRoad();
-        this.updateCockroachPig();
     }
 
     updateBigRoad() {
@@ -61,24 +54,6 @@ class BaccaratSimulation {
             bigRoad.appendChild(cell);
             rowIndex++;
         });
-    }
-
-    updateBigEyeBoy() {
-        const bigEyeBoy = document.getElementById('bigEyeBoy');
-        bigEyeBoy.innerHTML = '';
-        // Implement the Big Eye Boy logic here
-    }
-
-    updateSmallRoad() {
-        const smallRoad = document.getElementById('smallRoad');
-        smallRoad.innerHTML = '';
-        // Implement the Small Road logic here
-    }
-
-    updateCockroachPig() {
-        const cockroachPig = document.getElementById('cockroachPig');
-        cockroachPig.innerHTML = '';
-        // Implement the Cockroach Pig logic here
     }
 
     updateCounters(result) {
@@ -198,14 +173,6 @@ class BaccaratSimulation {
         this.updateRecommendedBet();
     }
 
-    changeViewMode() {
-        const viewMode = document.getElementById('viewModeSelect').value;
-        document.querySelectorAll('.viewContainer').forEach(view => {
-            view.classList.remove('active');
-        });
-        document.getElementById(viewMode).classList.add('active');
-    }
-
     incrementCustomSequence() {
         this.customSequenceIndex = (this.customSequenceIndex + 1) % this.customSequence.length;
     }
@@ -227,8 +194,4 @@ function recordLoss() {
 
 function changeStrategy() {
     baccaratSimulation.changeStrategy();
-}
-
-function changeViewMode() {
-    baccaratSimulation.changeViewMode();
 }

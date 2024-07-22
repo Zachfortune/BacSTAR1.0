@@ -82,6 +82,7 @@ class BaccaratSimulation {
             this.lossCount++;
             document.getElementById('lossCount').textContent = this.lossCount;
             this.confirmResult();
+            this.incrementCustomSequence(); // Continue sequence on loss
         }
     }
 
@@ -194,7 +195,6 @@ function recordWin() {
 
 function recordLoss() {
     baccaratSimulation.recordLoss();
-    baccaratSimulation.incrementCustomSequence(); // Continue sequence on loss
 }
 
 function changeStrategy() {

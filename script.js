@@ -168,9 +168,6 @@ class BaccaratSimulation {
     getZachSecretSauceBet() {
         const sequenceChar = this.customSequence[this.customSequenceIndex];
         const oppositeBet = sequenceChar === 'B' ? 'Player' : 'Banker';
-        
-        this.customSequenceIndex = (this.customSequenceIndex + 1) % this.customSequence.length;
-        
         return oppositeBet;
     }
 
@@ -178,6 +175,10 @@ class BaccaratSimulation {
         this.currentStrategy = strategy;
         this.resetStrategies(); // Reset strategies when changing
         this.updateRecommendedBet();
+    }
+
+    incrementCustomSequence() {
+        this.customSequenceIndex = (this.customSequenceIndex + 1) % this.customSequence.length;
     }
 }
 
@@ -193,6 +194,7 @@ function recordWin() {
 
 function recordLoss() {
     baccaratSimulation.recordLoss();
+    baccaratSimulation.incrementCustomSequence(); // Continue sequence on loss
 }
 
 function changeStrategy() {

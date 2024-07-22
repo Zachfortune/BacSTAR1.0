@@ -4,7 +4,6 @@ class BaccaratSimulation {
         this.currentStrategy = 'repeatLast';
         this.customSequence = 'BPBPPBBP';
         this.customSequenceIndex = 0;
-        this.lastRecommendedBet = '';
         this.potentialResult = '';
         this.winCount = 0;
         this.lossCount = 0;
@@ -45,9 +44,9 @@ class BaccaratSimulation {
 
         let colIndex = 0;
         let rowIndex = 0;
-        const maxRow = 6; // Typically Big Road has 6 rows
+        const maxRow = 6;
 
-        this.bigRoad.forEach((result, index) => {
+        this.bigRoad.forEach((result) => {
             if (rowIndex >= maxRow) {
                 rowIndex = 0;
                 colIndex++;
@@ -56,7 +55,6 @@ class BaccaratSimulation {
             cell.className = `bigRoadCell ${result.toLowerCase()}`;
             cell.textContent = result.charAt(0);
 
-            // Position the cell in the grid
             cell.style.gridRowStart = rowIndex + 1;
             cell.style.gridColumnStart = colIndex + 1;
 
@@ -68,22 +66,16 @@ class BaccaratSimulation {
     updateBigEyeBoy() {
         const bigEyeBoy = document.getElementById('bigEyeBoy');
         bigEyeBoy.innerHTML = '';
-
-        // Implement the Big Eye Boy logic here
     }
 
     updateSmallRoad() {
         const smallRoad = document.getElementById('smallRoad');
         smallRoad.innerHTML = '';
-
-        // Implement the Small Road logic here
     }
 
     updateCockroachPig() {
         const cockroachPig = document.getElementById('cockroachPig');
         cockroachPig.innerHTML = '';
-
-        // Implement the Cockroach Pig logic here
     }
 
     updateCounters(result) {
@@ -110,20 +102,17 @@ class BaccaratSimulation {
             this.lossCount++;
             document.getElementById('lossCount').textContent = this.lossCount;
             this.confirmResult();
-            this.incrementCustomSequence(); // Continue sequence on loss
+            this.incrementCustomSequence();
         }
     }
 
     resetStrategies() {
-        this.customSequenceIndex = 0; // Reset custom sequence index
+        this.customSequenceIndex = 0;
     }
 
     updateRecommendedBet() {
         const currentBet = this.getRecommendedBet();
-        this.lastRecommendedBet = currentBet;
-
-        const recommendedBetText = document.getElementById('recommendedBet');
-        recommendedBetText.textContent = `Recommended Bet: ${currentBet}`;
+        document.getElementById('recommendedBet').textContent = `Recommended Bet: ${currentBet}`;
     }
 
     getRecommendedBet() {
@@ -199,9 +188,10 @@ class BaccaratSimulation {
         return oppositeBet;
     }
 
-    changeStrategy(strategy) {
+    changeStrategy() {
+        const strategy = document.getElementById('strategySelect').value;
         this.currentStrategy = strategy;
-        this.resetStrategies(); // Reset strategies when changing
+        this.resetStrategies();
         this.updateRecommendedBet();
     }
 
@@ -230,12 +220,10 @@ function recordWin() {
 
 function recordLoss() {
     baccaratSimulation.recordLoss();
-    baccaratSimulation.incrementCustomSequence(); // Continue sequence on loss
 }
 
 function changeStrategy() {
-    const strategy = document.getElementById('strategySelect').value;
-    baccaratSimulation.changeStrategy(strategy);
+    baccaratSimulation.changeStrategy();
 }
 
 function changeViewMode() {

@@ -88,7 +88,6 @@ class BaccaratSimulation {
 
     resetStrategies() {
         this.customSequenceIndex = 0; // Reset custom sequence index
-        // Add other strategy resets here if needed
     }
 
     updateRecommendedBet() {
@@ -195,6 +194,7 @@ function recordWin() {
 
 function recordLoss() {
     baccaratSimulation.recordLoss();
+    baccaratSimulation.incrementCustomSequence(); // Continue sequence on loss
 }
 
 function changeStrategy() {

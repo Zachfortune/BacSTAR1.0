@@ -3,336 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baccarat Simulation</title>
+    <title>Baccarat Bet Recommender</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-        }
-        #container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 800px;
+            font-family: Arial, sans-serif;
             text-align: center;
+            margin-top: 50px;
         }
-        #statusText {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #333;
+        #result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
         }
-        .resultButton, .winLossButton {
-            padding: 10px 20px;
-            font-size: 18px;
-            margin: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .resultButton.player {
-            background-color: #007bff;
-            color: #fff;
-        }
-        .resultButton.banker {
-            background-color: #dc3545;
-            color: #fff;
-        }
-        .winLossButton {
-            background-color: #ffc107;
-            color: #fff;
-        }
-        .resultButton:hover, .winLossButton:hover {
-            opacity: 0.8;
-        }
-        #strategySelect {
+        select, button {
+            font-size: 1em;
             padding: 10px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
-        #recommendedBet {
-            margin-top: 20px;
-            font-size: 24px;
-            color: #28a745;
-        }
-        #counters {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-            font-size: 20px;
-        }
-        .counter {
-            background: #f0f0f0;
-            padding: 10px 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-        }
-        .viewContainer {
-            display: grid;
-            grid-template-columns: repeat(12, 30px);
-            gap: 1px;
-            margin-top: 20px;
-        }
-        .bigRoadCell {
-            width: 30px;
-            height: 30px;
-            border: 1px solid #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            border-radius: 50%;
-        }
-        .player {
-            background-color: #007bff;
-            color: white;
-        }
-        .banker {
-            background-color: #dc3545;
-            color: white;
+            margin: 10px;
         }
     </style>
 </head>
 <body>
-    <div id="container">
-        <div id="statusText">Enter the last result!</div>
-        <button class="resultButton player" onclick="setPotentialResult('Player')">Player</button>
-        <button class="resultButton banker" onclick="setPotentialResult('Banker')">Banker</button>
-        <div>
-            <label for="strategySelect">Select Betting Strategy: </label>
-            <select id="strategySelect" onchange="changeStrategy()">
-                <option value="repeatLast">Repeat Last Bet</option>
-                <option value="alternate">Alternate Bets</option>
-                <option value="trend">Follow the Trend</option>
-                <option value="reverseTrend">Reverse the Trend</option>
-                <option value="zachSecretSauce">Zach's Secret Sauce #1</option>
-            </select>
-        </div>
-        <div id="recommendedBet">Recommended Bet: </div>
-        <div id="counters">
-            <div class="counter">Wins: <span id="winCount">0</span></div>
-            <div class="counter">Losses: <span id="lossCount">0</span></div>
-            <div class="counter">Player: <span id="playerCount">0</span></div>
-            <div class="counter">Banker: <span id="bankerCount">0</span></div>
-        </div>
-        <div>
-            <button class="winLossButton" onclick="recordWin()">Win</button>
-            <button class="winLossButton" onclick="recordLoss()">Lose</button>
-        </div>
-        <div id="bigRoad" class="viewContainer"></div>
-    </div>
+
+    <h1>Baccarat Bet Recommender</h1>
+
+    <label for="lastBet">Last Bet (B/P):</label>
+    <input type="text" id="lastBet" maxlength="1" placeholder="B or P">
+
+    <br>
+
+    <label for="lastHands">Last 4 Hands (B/P):</label>
+    <input type="text" id="lastHands" maxlength="4" placeholder="BBBB">
+
+    <br>
+
+    <label for="strategy">Select Strategy:</label>
+    <select id="strategy">
+        <option value="repeat">Repeat Last Bet</option>
+        <option value="follow">Follow Last Bet</option>
+        <option value="alternate">Alternate Bet</option>
+        <option value="trend">Follow the Trend</option>
+        <option value="reverse">Reverse the Trend</option>
+        <option value="zach">Zach’s Secret Sauce</option>
+    </select>
+
+    <br>
+
+    <button onclick="recommendBet()">Recommend Bet</button>
+
+    <div id="result"></div>
 
     <script>
-        class BaccaratSimulation {
-            constructor() {
-                this.bigRoad = [];
-                this.currentStrategy = 'repeatLast';
-                this.customSequence = 'BPBPPBBP';
-                this.customSequenceIndex = 0;
-                this.potentialResult = '';
-                this.winCount = 0;
-                this.lossCount = 0;
-                this.playerCount = 0;
-                this.bankerCount = 0;
+        function recommendBet() {
+            const lastBet = document.getElementById('lastBet').value.trim().toUpperCase();
+            const lastHands = document.getElementById('lastHands').value.trim().toUpperCase();
+            const strategy = document.getElementById('strategy').value;
+            let recommendation = '';
+
+            if (lastBet !== 'B' && lastBet !== 'P') {
+                document.getElementById('result').innerText = 'Please enter a valid last bet (B or P).';
+                return;
             }
 
-            setPotentialResult(result) {
-                this.potentialResult = result;
-                document.getElementById('statusText').textContent = `Potential Result: ${result}`;
+            if (lastHands.length !== 4 || !/^[BP]+$/.test(lastHands)) {
+                document.getElementById('result').innerText = 'Please enter a valid sequence of last 4 hands (B or P).';
+                return;
             }
 
-            confirmResult() {
-                if (this.potentialResult) {
-                    this.recordResult(this.potentialResult);
-                    this.potentialResult = '';
-                    document.getElementById('statusText').textContent = 'Enter the last result!';
-                }
-            }
-
-            recordResult(result) {
-                this.bigRoad.push(result);
-                this.updateBigRoad();
-                this.updateCounters(result);
-                this.updateRecommendedBet();
-            }
-
-            updateBigRoad() {
-                const bigRoad = document.getElementById('bigRoad');
-                bigRoad.innerHTML = '';
-
-                let colIndex = 0;
-                let rowIndex = 0;
-                const maxRow = 6;
-
-                this.bigRoad.forEach((result) => {
-                    if (rowIndex >= maxRow) {
-                        rowIndex = 0;
-                        colIndex++;
+            switch (strategy) {
+                case 'repeat':
+                    recommendation = lastBet;
+                    break;
+                case 'follow':
+                    recommendation = lastBet;
+                    break;
+                case 'alternate':
+                    recommendation = lastBet === 'B' ? 'P' : 'B';
+                    break;
+                case 'trend':
+                    const trendCount = { B: 0, P: 0 };
+                    for (let hand of lastHands) {
+                        trendCount[hand]++;
                     }
-                    const cell = document.createElement('div');
-                    cell.className = `bigRoadCell ${result.toLowerCase()}`;
-                    cell.textContent = result.charAt(0);
-
-                    cell.style.gridRowStart = rowIndex + 1;
-                    cell.style.gridColumnStart = colIndex + 1;
-
-                    bigRoad.appendChild(cell);
-                    rowIndex++;
-                });
+                    recommendation = trendCount.B >= trendCount.P ? 'B' : 'P';
+                    break;
+                case 'reverse':
+                    const reverseCount = { B: 0, P: 0 };
+                    for (let hand of lastHands) {
+                        reverseCount[hand]++;
+                    }
+                    recommendation = reverseCount.B < reverseCount.P ? 'B' : 'P';
+                    break;
+                case 'zach':
+                    const zachPattern = 'BPBPPBBP';
+                    const patternIndex = lastHands.length % zachPattern.length;
+                    recommendation = zachPattern[patternIndex] === 'B' ? 'P' : 'B';
+                    break;
+                default:
+                    recommendation = 'Invalid strategy selected';
+                    break;
             }
 
-            updateCounters(result) {
-                if (result === 'Player') {
-                    this.playerCount++;
-                } else if (result === 'Banker') {
-                    this.bankerCount++;
-                }
-                document.getElementById('playerCount').textContent = this.playerCount;
-                document.getElementById('bankerCount').textContent = this.bankerCount;
-            }
-
-            recordWin() {
-                if (this.potentialResult) {
-                    this.winCount++;
-                    document.getElementById('winCount').textContent = this.winCount;
-                    this.confirmResult();
-                    this.resetStrategies();
-                }
-            }
-
-            recordLoss() {
-                if (this.potentialResult) {
-                    this.lossCount++;
-                    document.getElementById('lossCount').textContent = this.lossCount;
-                    this.confirmResult();
-                    this.incrementCustomSequence();
-                }
-            }
-
-            resetStrategies() {
-                this.customSequenceIndex = 0;
-            }
-
-            updateRecommendedBet() {
-                const currentBet = this.getRecommendedBet();
-                document.getElementById('recommendedBet').textContent = `Recommended Bet: ${currentBet}`;
-            }
-
-            getRecommendedBet() {
-                switch (this.currentStrategy) {
-                    case 'repeatLast':
-                        return this.getRepeatLastBet();
-                    case 'alternate':
-                        return this.getAlternateBet();
-                    case 'trend':
-                        return this.getTrendBet();
-                    case 'reverseTrend':
-                        return this.getReverseTrendBet();
-                    case 'zachSecretSauce':
-                        return this.getZachSecretSauceBet();
-                    default:
-                        return 'Player';
-                }
-            }
-
-            getRepeatLastBet() {
-                if (this.bigRoad.length === 0) {
-                    return 'Player';
-                }
-                return this.bigRoad[this.bigRoad.length - 1];
-            }
-
-            getAlternateBet() {
-                if (this.bigRoad.length === 0) {
-                    return 'Player';
-                }
-                return this.bigRoad[this.bigRoad.length - 1] === 'Player' ? 'Banker' : 'Player';
-            }
-
-            getTrendBet() {
-                if (this.bigRoad.length < 4) {
-                    return this.getRepeatLastBet();
-                }
-
-                const lastFour = this.bigRoad.slice(-4);
-                const playerCount = lastFour.filter(result => result === 'Player').length;
-                const bankerCount = lastFour.filter(result => result === 'Banker').length;
-
-                if (playerCount > bankerCount) {
-                    return 'Player';
-                } else if (bankerCount > playerCount) {
-                    return 'Banker';
-                } else {
-                    return this.big
-                    return this.bigRoad[this.bigRoad.length - 1];
-                }
-            }
-
-            getReverseTrendBet() {
-                if (this.bigRoad.length < 4) {
-                    return this.getAlternateBet();
-                }
-
-                const lastFour = this.bigRoad.slice(-4);
-                const playerCount = lastFour.filter(result => result === 'Player').length;
-                const bankerCount = lastFour.filter(result => result === 'Banker').length;
-
-                if (playerCount > bankerCount) {
-                    return 'Banker';
-                } else if (bankerCount > playerCount) {
-                    return 'Player';
-                } else {
-                    return this.bigRoad[this.bigRoad.length - 1] === 'Player' ? 'Banker' : 'Player';
-                }
-            }
-
-            getZachSecretSauceBet() {
-                const sequenceChar = this.customSequence[this.customSequenceIndex];
-                const oppositeBet = sequenceChar === 'B' ? 'Player' : 'Banker';
-                return oppositeBet;
-            }
-
-            changeStrategy() {
-                const strategy = document.getElementById('strategySelect').value;
-                this.currentStrategy = strategy;
-                this.resetStrategies();
-                this.updateRecommendedBet();
-            }
-
-            incrementCustomSequence() {
-                this.customSequenceIndex = (this.customSequenceIndex + 1) % this.customSequence.length;
-            }
-        }
-
-        const baccaratSimulation = new BaccaratSimulation();
-
-        function setPotentialResult(result) {
-            baccaratSimulation.setPotentialResult(result);
-        }
-
-        function recordWin() {
-            baccaratSimulation.recordWin();
-        }
-
-        function recordLoss() {
-            baccaratSimulation.recordLoss();
-        }
-
-        function changeStrategy() {
-            baccaratSimulation.changeStrategy();
+            document.getElementById('result').innerText = `Recommended Bet: ${recommendation}`;
         }
     </script>
+
 </body>
 </html>
